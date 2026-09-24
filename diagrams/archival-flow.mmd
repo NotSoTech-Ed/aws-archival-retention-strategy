@@ -1,0 +1,16 @@
+flowchart TD
+    A[Discover datasets] --> B[Register owner, class, purpose, region]
+    B --> C{Retention and recovery assessment}
+    C -->|Still active| D[Keep in Redshift / S3 Standard]
+    C -->|Historical| E[Unload partition to encrypted S3]
+    E --> F[Validate manifest, counts, schema, checksum]
+    F --> G[Apply lifecycle policy by tags]
+    G --> H[Transition to appropriate S3 class]
+    H --> I{Restore request?}
+    I -->|Yes| J[Approve and restore to temporary prefix]
+    J --> K[Validate and consume with least privilege]
+    I -->|No| L{Expiry date reached?}
+    L -->|No| H
+    L -->|Yes| M{Legal hold / exception?}
+    M -->|Yes| N[Pause expiry and escalate]
+    M -->|No| O[Expire and preserve evidence]

@@ -1,0 +1,18 @@
+{
+  "horizon_months": 12,
+  "current": {
+    "redshift_gb": 12000,
+    "s3_standard_gb": 0,
+    "monthly_growth_gb": 250
+  },
+  "archive": {
+    "redshift_gb_to_unload": 9000,
+    "s3_archive_gb": 9000,
+    "monthly_new_archive_gb": 250,
+    "s3_put_requests": 15000,
+    "s3_get_requests": 200,
+    "monthly_retrieval_gb": 25,
+    "unload_compute_hours": 30,
+    "one_time_migration_usd": 5000
+  }
+}

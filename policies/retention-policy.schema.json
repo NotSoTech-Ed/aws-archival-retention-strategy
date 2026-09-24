@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Enterprise retention policy",
+  "type": "object",
+  "required": ["version", "policy_id", "effective_date", "required_metadata", "retention_classes", "datasets"],
+  "properties": {
+    "version": { "type": "string" },
+    "policy_id": { "type": "string", "minLength": 1 },
+    "effective_date": { "type": "string", "format": "date" },
+    "review_after": { "type": "string", "format": "date" },
+    "default_action": { "enum": ["quarantine", "retain", "reject"] },
+    "required_metadata": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "retention_classes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "active_days", "transition", "expire_after_days"],
+        "properties": {
+          "id": { "type": "string" },
+          "active_days": { "type": "integer", "minimum": 0 },
+          "transition": {
+            "type": "object",
+            "required": ["storage_class", "after_days"],
+            "properties": {
+              "storage_class": { "type": "string" },
+              "after_days": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "expire_after_days": { "type": "integer", "minimum": 0 },
+          "restore": { "type": "object" },
+          "controls": { "type": "object" }
+        }
+      }
+    },
+    "datasets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dataset_id", "source", "owner_id", "owner_status", "classification", "retention_class", "residency"],
+        "properties": {
+          "dataset_id": { "type": "string" },
+          "source": { "type": "string" },
+          "owner_id": { "type": "string" },
+          "owner_status": { "enum": ["assigned", "unassigned", "interim"] },
+          "classification": { "type": "string" },
+          "retention_class": { "type": "string" },
+          "residency": { "type": "string" },
+          "legal_hold": { "type": "boolean" }
+        }
+      }
+    },
+    "exceptions": { "type": "array" }
+  }
+}

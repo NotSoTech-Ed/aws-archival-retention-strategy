@@ -1,0 +1,51 @@
+version: "1.0"
+policy_id: enterprise-default
+effective_date: "2026-01-01"
+review_after: "2027-01-01"
+default_action: quarantine
+required_metadata:
+  - dataset-id
+  - owner-id
+  - owner-status
+  - classification
+  - retention-class
+  - legal-hold
+  - cost-center
+  - residency
+retention_classes:
+  - id: hot-90d
+    description: Frequently queried or operational data.
+    active_days: 90
+    transition:
+      storage_class: STANDARD
+      after_days: 0
+    expire_after_days: 365
+    restore:
+      target_rto_hours: 1
+      approval: owner
+  - id: compliance-7y
+    description: Historical records with a seven-year retention requirement.
+    active_days: 90
+    transition:
+      storage_class: GLACIER
+      after_days: 90
+    expire_after_days: 2555
+    restore:
+      target_rto_hours: 24
+      approval: owner-and-records-manager
+    controls:
+      object_lock: required
+      legal_hold_check: required
+datasets:
+  - dataset_id: replace-me
+    source: redshift://cluster/database/schema/table
+    owner_id: replace-with-role-or-person
+    owner_status: assigned
+    classification: confidential
+    retention_class: compliance-7y
+    residency: eu-west-1
+    legal_basis: replace-with-policy-or-contract
+    partition_key: event_date
+    archive_prefix: s3://replace-me/archive/dataset=replace-me/
+    delete_source_after_validation: false
+exceptions: []
